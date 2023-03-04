@@ -1,0 +1,35 @@
+import requests
+from bs4 import BeautifulSoup
+
+# URL of the website to scrape
+url = 'https://qcpi.questcdn.com/cdn/posting/?group=1950787&provider=1950787'
+
+# Send a request to the website and get the HTML response
+response = requests.get(url)
+
+# Parse the HTML content using BeautifulSoup
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Find the table containing the job postings
+table = soup.find('table', class_='bids')
+
+# Extract the first 10 rows of the table (excluding the header row)
+rows = table.find_all('tr')[1:11]
+
+# Loop through each row and extract the desired information
+for row in rows:
+    # Get the columns in the row
+    columns = row.find_all('td')
+    
+    # Extract the fields of interest
+    est_value = columns[0].text.strip()
+    notes = columns[1].text.strip()
+    description = columns[2].text.strip()
+    closing_date = columns[3].text.strip()
+    
+    # Print the extracted information
+    print(f'Est. Value: {est_value}')
+    print(f'Notes: {notes}')
+    print(f'Description: {description}')
+    print(f'Closing Date: {closing_date}')
+    print('---')
